@@ -106,7 +106,7 @@ const config = {
             className: "navbar__item--with-icon",
           },
           {
-            to: "/Map",
+            to: "/map",
             html: '<i class="fa fa-map"></i><span>Map</span>',
             position: "left",
             className: "navbar__item--with-icon",
