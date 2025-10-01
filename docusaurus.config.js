@@ -70,6 +70,24 @@ const config = {
     ],
   ],
 
+
+  plugins: [
+    [
+      "@dipakparmar/docusaurus-plugin-umami",
+      /** @type {import('@dipakparmar/docusaurus-plugin-umami').Options} */
+      ({
+        websiteID: "00ba9af5-ff33-490a-a908-67e9c93dd552", // Required
+        analyticsDomain: "cloud.umami.is", // Required
+        scriptName: "script.js", // Optional, defaults to script.js
+        dataAutoTrack: true, // Optional, defaults to true
+        dataDoNotTrack: false, // Optional, defaults to false
+        dataCache: false, // Optional, defaults to false
+        dataExcludeSearch: false, // Optional, defaults to false
+        dataExcludeHash: false, // Optional, defaults to false
+      }),
+    ]
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -94,26 +112,20 @@ const config = {
             className: "navbar__item--with-icon",
           },
           {
-            to: "/docs/intro",
-            html: '<i class="fa fa-book"></i><span>Wiki</span>',
+            to: "/docs",
+            html: '<i class="fa fa-book"></i><span>Docs</span>',
+            position: "left",
+            className: "navbar__item--with-icon",
+          },
+          {
+            to: "https://app.aria.watch",
+            html: '<i class="fa fa-gear"></i><span>App</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
           {
             to: "/api",
             html: '<i class="fa fa-plug"></i><span>API</span>',
-            position: "left",
-            className: "navbar__item--with-icon",
-          },
-          {
-            to: "/map",
-            html: '<i class="fa fa-map"></i><span>Map</span>',
-            position: "left",
-            className: "navbar__item--with-icon",
-          },
-          {
-            to: "/contact",
-            html: '<i class="fa fa-envelope"></i><span>Contact</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
@@ -132,14 +144,14 @@ const config = {
         ],
       },
       footer: {
-        style: 'dark',
+        style: 'light',
         links: [
           {
             title: 'Docs',
             items: [
               {
                 label: 'Tutorial',
-                to: '/docs/intro',
+                to: '/docs',
               },
             ],
           },
@@ -173,6 +185,8 @@ const config = {
         darkTheme: prismThemes.dracula,
       },
     }),
+    
 };
+
 
 export default config;
