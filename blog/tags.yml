@@ -1,19 +1,17 @@
-facebook:
-  label: Facebook
-  permalink: /facebook
-  description: Facebook tag description
+faire:
+  label: Faire
+  permalink: /faire
+  description: Faire
 
-hello:
-  label: Hello
-  permalink: /hello
-  description: Hello tag description
+news:
+  label: News
+  permalink: /news
+  description: News
 
-docusaurus:
-  label: Docusaurus
-  permalink: /docusaurus
-  description: Docusaurus tag description
+update:
+  label: Update
+  permalink: /update
+  description: Update
 
-hola:
-  label: Hola
-  permalink: /hola
-  description: Hola tag description
+
+

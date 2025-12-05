@@ -1,105 +1,95 @@
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import React from 'react';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-
-import Heading from '@theme/Heading';
+import clsx from 'clsx';
 import styles from './index.module.css';
 
-function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
-  
+const features = [
+  {
+    title: 'Open Hardware Devices',
+    imageUrl: 'https://r3-it.storage.cloud.it/aria-public/website/svg/undraw_open-source_g069.svg',
+    description: (
+      <>
+        Build your own devices using detailed guides and open-source schematics.
+      </>
+    ),
+  },
+  {
+    title: 'Global Data Network',
+    imageUrl: 'https://r3-it.storage.cloud.it/aria-public/website/svg/undraw_server-status_7viz.svg',
+    description: (
+      <>
+        Access and share real-time, crowdsourced air quality data from around the world.
+      </>
+    ),
+  },
+  {
+    title: 'Community Collaboration',
+    imageUrl: 'https://r3-it.storage.cloud.it/aria-public/website/svg/undraw_work-chat_hc3y.svg',
+    description: (
+      <>
+        Join makers, researchers, and activists working together for climate action.
+      </>
+    ),
+  },
+];
+
+function Feature({imageUrl, title, description}) {
   return (
-    <header className={styles.heroBanner}>
-      <div className="container">
-        <h1 className="hero__title">Do you know what you are breathing?</h1>
-        <p className="hero__subtitle">
-          Our mission is to fight against fake news regarding climate change actively. 
-          We plan to achieve that by building a network of devices spread worldwide 
-          to ensure an accurate and reliable reading of the info.
-        </p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--primary button--lg"
-            to="https://r3-it.storage.cloud.it/aria-public/White_Paper.pdf">
-            📄 Read the Whitepaper
-          </Link>
+    <div className={clsx('col col--4', styles.feature)}>
+      {imageUrl && (
+        <div className="text--center">
+          <img className={styles.featureImage} src={imageUrl} alt={title} />
         </div>
-      </div>
-    </header>
+      )}
+      <h3 className="text--center">{title}</h3>
+      <p className="text--center">{description}</p>
+    </div>
   );
 }
-
-function AboutSection() {
-  return (
-    <section className={styles.features}>
-      <div className="container">
-        <div className="row">
-          <div className="col text--center">
-            <h2>About the project!</h2>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col col--6">
-            <div className={styles.featureItem}>
-              <div className="text--center">
-                <img 
-                  src="/svg/park.svg" 
-                  alt="Park icon" 
-                  className={styles.featureSvg}
-                />
-              </div>
-              <div className="text--left padding-horiz--md">
-                <p>
-                  We are experiencing a global emergency. The temperature is rising, and we
-                  can't stop it right now. Unfortunately, that has started a wave of fake news 
-                  regarding the matter that can be used to trick people into believing something 
-                  to support a political agenda. This phenomenon is hazardous for citizens and 
-                  politicians because it prevents them from taking the proper countermeasures
-                  and fighting this problem best.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col col--6">
-            <div className={styles.featureItem}>
-              <div className="text--center">
-                <img 
-                  src="/svg/environment.svg" 
-                  alt="Environment icon" 
-                  className={styles.featureSvg}
-                />
-              </div>
-              <div className="text--left padding-horiz--md">
-                <p>
-                  That's where we step in. We are creating a device capable of giving users
-                  accurate data regarding greenhouse gases. This step is crucial because 
-                  everyone should be able to formulate an educated opinion. By comparing new 
-                  policies or countermeasures with the air quality change, we want to give 
-                  people the freedom to choose their city's best course of action.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
 
 export default function Home() {
-  const {siteConfig} = useDocusaurusContext();
-  
   return (
     <Layout
-      title={`Home | ${siteConfig.title}`}
-      description="AriaWatch aims to combat climate change misinformation by providing users with accurate data on air quality">
-      <HomepageHeader />
+      title="Aria Watch"
+      description="Know what you breathe. Act for the planet.">
       <main>
-        <AboutSection />
+        <header className={styles.heroBanner}>
+          <div className="container">
+            <h1 className={styles.heroTitle}>Aria Watch</h1>
+            <p className={styles.heroSubtitle}>
+              Know what you breathe.<br></br>
+              Act for the planet.
+            </p>
+            <div className={styles.buttons}>
+              <a className="button button--primary button--lg" href="/docs">
+                Get Started
+              </a>
+              <a className="button button--secondary button--lg" href="/about">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <section className={styles.featuresSection}>
+          {features.map((props, idx) => (
+            <Feature key={idx} {...props} />
+          ))}
+        </section>
+
+        <section className={clsx(styles.callToAction)}>
+          <div className="container text--center">
+            <h2>Join the Movement</h2>
+            <p>Contribute, build, and make a difference with Aria Watch.</p>
+            <a
+              className="button button--primary button--lg"
+              href="https://github.com/Aria-Watch/Aria-Watch-Borino-PCB"
+              target="_blank"
+              rel="noopener noreferrer">
+              Get Involved on GitHub
+            </a>
+          </div>
+        </section>
       </main>
     </Layout>
   );

@@ -1,15 +1,15 @@
-In this paragraph it's described how to assemble the PCB that we designed starting from the order from JLCPCB.
+# Borino PCB Assembly Guide
 
-In you want to build our device, make sure you have some background in soldering, even with SMD components.
+This guide describes the step-by-step process for assembling the Borino PCB, starting from receiving your custom board from the manufacturer.
 
-Alternatively, you can create your own just by using any breadboard and by buying already soldered modules. But that's not going to be covered in this article.
+If you wish to build the Borino device, it’s important to have prior experience with soldering, particularly surface-mount (SMD) techniques. Alternatively, the device can be prototyped using a breadboard and pre-soldered modules, but this approach isn’t covered in this guide.
 
 ![Borino PCB](https://r3-it.storage.cloud.it/aria-public/website/pictures/getting_started/Borino_reduced.jpg)
 
 
 # Requirements
 For the PCB build you are going to need at least the following:
-## Hardware:
+## Tools:
 - Air solder (Hot air station)
 - Soldering iron
 - Flux
@@ -30,13 +30,16 @@ For the PCB build you are going to need at least the following:
 - 1x [Bosch BME680](https://s.click.aliexpress.com/e/_c3NJAwJn)
 - 1x [SCD40](https://s.click.aliexpress.com/e/_c2RXf1OD)
 
-PS: You can easily get all the components from Aliexpress.
+All components can be sourced from popular suppliers such as Aliexpress.
 
 
 # Manufacturing the PCB
 You can find the pcb design on our github right here: https://github.com/Aria-Watch/Aria-Watch-Borino-PCB
 
 Feel free to choose with which manufacturer go, we suggest you JLCPCB.
+
+---
+
 # Lets assemble!
 So, lets get to the assembly process. 
 
@@ -111,10 +114,17 @@ Last, the hardest one to solder with the heat gun, the Bosh VOC sensor, apply ju
 
 ![VOC](https://r3-it.storage.cloud.it/aria-public/website/pictures/getting_started/VOC_reduced.jpg)
 
-# Connect and flash the firmware
+# Final Steps: Firmware Installation
 
-For this process, please follow the istructions on the github ReadMe: https://github.com/Aria-Watch/Aria-Watch-Firmware
+Refer to the firmware README for connection and flashing instructions: https://github.com/Aria-Watch/Aria-Watch-Firmware
 
- 
+---
+
+# Tips
+
+- Follow component orientation and polarity as marked.
+- Review each solder joint with a magnifier; cold or bridged joints commonly cause assembly issues.
+- Ensure your work area is ESD-safe, especially when handling sensitive ICs.
+- Include test and inspection steps after initial assembly for troubleshooting
 
 
