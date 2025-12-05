@@ -16,19 +16,19 @@ For the PCB build you are going to need at least the following:
 - Solder paste
 - Solder 
 ## Components:
-- 1 x USB Type C 16 Pin (USB4105)
-- 1x 2.45mm 4 Pin Header
-- 1x Molex 53261-0871 8 Pin
-- 1x AMS1117 3.3v Regulator
-- 1x 5050 RGB WS2812B LED
-- 1x ESP32-S3 (With or with external antenna)
-- 1x 1uF SMD 0805 Capacitor
-- 1x 22uF SMD 0805 Capacitor
-- 2x 4.7k Ohm 1/4W through hole resistors
-- 1x 10k Ohm 1/4W through hole resistor
-- 1x PMS5003 
-- 1x Bosch BME680
-- 1x SCD40
+- 1 x [USB Type C 16 Pin](https://s.click.aliexpress.com/e/_c3QwlAOH) (USB4105)
+- 1x [2.45mm 4 Pin Header](https://s.click.aliexpress.com/e/_c3BsQGPX)
+- 1x [Molex 53261-0871 8 Pin](https://s.click.aliexpress.com/e/_c4enZrZJ)
+- 1x [AMS1117 3.3v Regulator](https://s.click.aliexpress.com/e/_c3v3XeeV)
+- 1x [5050 RGB WS2812B LED](https://s.click.aliexpress.com/e/_c4sTNSZF)
+- 1x [ESP32-S3](https://s.click.aliexpress.com/e/_c3ZwtIFn) (With or with external antenna)
+- 1x [1uF SMD 0805 Capacitor](https://s.click.aliexpress.com/e/_c2R7RMYp)
+- 1x [22uF SMD 0805 Capacitor](https://s.click.aliexpress.com/e/_c2R7RMYp)
+- 2x [4.7k Ohm 1/4W through hole resistors](https://s.click.aliexpress.com/e/_c4nYLeEN)
+- 1x [10k Ohm 1/4W through hole resistor](https://s.click.aliexpress.com/e/_c4nYLeEN)
+- 1x [PMS5003](https://s.click.aliexpress.com/e/_c4DNMPAv)
+- 1x [Bosch BME680](https://s.click.aliexpress.com/e/_c3NJAwJn)
+- 1x [SCD40](https://s.click.aliexpress.com/e/_c2RXf1OD)
 
 PS: You can easily get all the components from Aliexpress.
 
