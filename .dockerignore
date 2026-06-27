@@ -1,0 +1,27 @@
+# Keep the build context (and final image) small and reproducible.
+# node_modules and build are regenerated inside the image.
+node_modules
+build
+.docusaurus
+
+# Version control / CI / editor
+.git
+.gitignore
+.github
+
+# Specs, docs-tooling, and local test artifacts not needed to build/serve
+.kiro
+test
+coverage
+jest.config.js
+jest.setup.js
+
+# Logs and OS cruft
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Local env files (never bake secrets into the image)
+.env
+.env.*
