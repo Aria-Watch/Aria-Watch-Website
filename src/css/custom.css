@@ -442,3 +442,55 @@ select:focus:not(:focus-visible),
 textarea:focus:not(:focus-visible) {
   outline: none;
 }
+
+
+/* ==========================================================================
+   Code syntax-highlight token contrast (Requirement 8.4)
+   --------------------------------------------------------------------------
+   The bundled Prism themes (github = light, dracula = dark) leave a few
+   syntax-token groups below the WCAG AA 4.5:1 threshold against the code
+   background. prism-react-renderer applies token colors via INLINE styles,
+   so these overrides require `!important` to win. The replacement colors are
+   chosen to clear 4.5:1 against the code background in each mode:
+     - Light_Mode code background: #f6f8fa (github)
+     - Dark_Mode  code background: #282a36 (dracula)
+   ========================================================================== */
+
+/* Light_Mode (github theme) — raise the under-threshold token groups. */
+html:not([data-theme='dark']) .prism-code .token.comment,
+html:not([data-theme='dark']) .prism-code .token.prolog,
+html:not([data-theme='dark']) .prism-code .token.cdata {
+  color: #57606a !important; /* ~6.1:1 on #f6f8fa */
+}
+
+html:not([data-theme='dark']) .prism-code .token.keyword,
+html:not([data-theme='dark']) .prism-code .token.tag,
+html:not([data-theme='dark']) .prism-code .token.operator {
+  color: #b31d28 !important; /* ~6.5:1 on #f6f8fa */
+}
+
+html:not([data-theme='dark']) .prism-code .token.number,
+html:not([data-theme='dark']) .prism-code .token.constant,
+html:not([data-theme='dark']) .prism-code .token.boolean,
+html:not([data-theme='dark']) .prism-code .token.symbol {
+  color: #0451a5 !important; /* ~7:1 on #f6f8fa */
+}
+
+html:not([data-theme='dark']) .prism-code .token.string,
+html:not([data-theme='dark']) .prism-code .token.char,
+html:not([data-theme='dark']) .prism-code .token.attr-value,
+html:not([data-theme='dark']) .prism-code .token.regex {
+  color: #032f62 !important; /* ~13:1 on #f6f8fa */
+}
+
+html:not([data-theme='dark']) .prism-code .token.function,
+html:not([data-theme='dark']) .prism-code .token.class-name {
+  color: #5a2da0 !important; /* ~6:1 on #f6f8fa */
+}
+
+/* Dark_Mode (dracula theme) — only the comment group is below AA. */
+[data-theme='dark'] .prism-code .token.comment,
+[data-theme='dark'] .prism-code .token.prolog,
+[data-theme='dark'] .prism-code .token.cdata {
+  color: #a6b1e0 !important; /* ~6.8:1 on #282a36 */
+}
