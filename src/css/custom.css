@@ -7,15 +7,106 @@
 @import "font-awesome/css/font-awesome.min.css";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
+/* ==========================================================================
+   Theme_System — design-token layer (single source of truth)
+   --------------------------------------------------------------------------
+   Color_Palette role tokens (--aw-color-*) are defined once per mode, with
+   exactly one value per role. They are mapped onto the corresponding
+   Infima --ifm-* variables so the navbar, footer, and content surfaces all
+   inherit them. The spacing (--aw-space-*) and radius (--aw-radius-*) scales
+   provide the discrete steps consumed by cards, buttons, and section
+   containers.
+   ========================================================================== */
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
+  /* --- Color_Palette role tokens (Light_Mode): one value per role --- */
+  /* Primary is also the link role (normal text); darkened from #2e8555 to
+     #2b7d4f so it meets WCAG AA 4.5:1 against BOTH surface (#fff = 5.06:1)
+     and background (#f7faf8 = 4.82:1). See task 1.3 contrast audit. */
+  --aw-color-primary: #2b7d4f;
+  --aw-color-accent: #0e7490;
+  --aw-color-surface: #ffffff;
+  --aw-color-background: #f7faf8;
+  --aw-color-text: #16231c;
+
+  /* --- Spacing scale (>= 4 steps) --- */
+  --aw-space-1: 0.25rem;
+  --aw-space-2: 0.5rem;
+  --aw-space-3: 1rem;
+  --aw-space-4: 1.5rem;
+  --aw-space-5: 2rem;
+
+  /* --- Border-radius scale (>= 3 steps) --- */
+  --aw-radius-sm: 0.25rem;
+  --aw-radius-md: 0.5rem;
+  --aw-radius-lg: 1rem;
+
+  /* --- Hero_Section tokens ---
+     The hero renders text/controls over a background image. A dark gradient
+     overlay is applied so the hero text always sits over a sufficiently dark
+     surface. These tokens are intentionally mode-stable (defined once, in
+     :root, and inherited by dark mode) so contrast is guaranteed at >=4.5:1
+     in BOTH Light_Mode and Dark_Mode without depending on the active palette.
+       - Title/tagline/secondary text: white over the dark overlay (>= 4.5:1)
+       - Primary control: white fill + very-dark-green text (>= 7:1)
+       - Secondary control: transparent fill + white border + white text */
+  --aw-hero-text: #ffffff;
+  --aw-hero-overlay-start: rgba(10, 48, 27, 0.86);
+  --aw-hero-overlay-end: rgba(13, 74, 45, 0.66);
+  --aw-hero-primary-bg: #ffffff;
+  --aw-hero-primary-bg-hover: #eafbe6;
+  --aw-hero-primary-text: #11321f;
+  --aw-hero-secondary-text: #ffffff;
+  --aw-hero-secondary-border: #ffffff;
+  --aw-hero-secondary-bg-hover: rgba(255, 255, 255, 0.16);
+
+  /* --- CTA_Section tokens ---
+     The CTA renders heading, supporting text, and an action control over a
+     dark-green gradient banner. Like the hero, these tokens are mode-stable
+     (defined once, inherited by dark mode) so heading/text/control contrast
+     is guaranteed at WCAG AA in BOTH Light_Mode and Dark_Mode.
+       - Heading/supporting text: white over the dark banner (>= 12:1)
+       - Action control: white fill + very-dark-green text (>= 7:1)
+       - Focus ring: white over the dark banner (>= 12:1, meets AA)
+       - Disabled control: muted fill/text that reads as unavailable */
+  --aw-cta-bg-start: #0a301b;
+  --aw-cta-bg-end: #0d4a2d;
+  --aw-cta-text: #ffffff;
+  --aw-cta-button-bg: #ffffff;
+  --aw-cta-button-bg-hover: #eafbe6;
+  --aw-cta-button-text: #11321f;
+  --aw-cta-focus-ring: #ffffff;
+  --aw-cta-disabled-bg: rgba(255, 255, 255, 0.22);
+  --aw-cta-disabled-text: #e6ece8;
+
+  /* --- Map role tokens onto Infima variables --- */
+  --ifm-color-primary: var(--aw-color-primary);
   --ifm-color-primary-dark: #29784c;
   --ifm-color-primary-darker: #277148;
   --ifm-color-primary-darkest: #205d3b;
   --ifm-color-primary-light: #33925d;
   --ifm-color-primary-lighter: #359962;
   --ifm-color-primary-lightest: #3cad6e;
+
+  --ifm-background-color: var(--aw-color-background);
+  --ifm-background-surface-color: var(--aw-color-surface);
+  --ifm-navbar-background-color: var(--aw-color-surface);
+  --ifm-footer-background-color: var(--aw-color-surface);
+  --ifm-font-color-base: var(--aw-color-text);
+  --ifm-heading-color: var(--aw-color-text);
+  --ifm-link-color: var(--aw-color-primary);
+
+  /* --- Navbar token mapping (Light_Mode) ---
+     Link text uses the high-contrast text role (#16231c on the #ffffff
+     surface => >= 12:1, well above AA). Hover swaps to the primary role.
+     The focus ring uses the accent role (#0e7490 on #ffffff => ~4.7:1,
+     meeting AA's >= 3:1 for non-text UI against the navbar background). */
+  --ifm-navbar-link-color: var(--aw-color-text);
+  --ifm-navbar-link-hover-color: var(--aw-color-primary);
+  --aw-navbar-icon-color: var(--aw-color-primary);
+  --aw-navbar-focus-ring: var(--aw-color-accent);
+
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 
@@ -23,20 +114,76 @@
   --ifm-heading-font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
+
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
+  /* --- Color_Palette role tokens (Dark_Mode): one value per role --- */
+  --aw-color-primary: #25c2a0;
+  --aw-color-accent: #38bdf8;
+  --aw-color-surface: #1c2320;
+  --aw-color-background: #121615;
+  --aw-color-text: #e9efea;
+
+  /* --- Map role tokens onto Infima variables --- */
+  --ifm-color-primary: var(--aw-color-primary);
   --ifm-color-primary-dark: #21af90;
   --ifm-color-primary-darker: #1fa588;
   --ifm-color-primary-darkest: #1a8870;
   --ifm-color-primary-light: #29d5b0;
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
+
+  --ifm-background-color: var(--aw-color-background);
+  --ifm-background-surface-color: var(--aw-color-surface);
+  --ifm-navbar-background-color: var(--aw-color-surface);
+  --ifm-footer-background-color: var(--aw-color-surface);
+  --ifm-font-color-base: var(--aw-color-text);
+  --ifm-heading-color: var(--aw-color-text);
+  --ifm-link-color: var(--aw-color-primary);
+
+  /* --- Navbar token mapping (Dark_Mode) ---
+     Link text uses the light text role (#e9efea on the #1c2320 surface
+     => ~13:1, well above AA). Hover swaps to the primary role. The focus
+     ring uses the accent role (#38bdf8 on #1c2320 => ~7:1, meeting AA's
+     >= 3:1 for non-text UI against the navbar background). */
+  --ifm-navbar-link-color: var(--aw-color-text);
+  --ifm-navbar-link-hover-color: var(--aw-color-primary);
+  --aw-navbar-icon-color: var(--aw-color-primary);
+  --aw-navbar-focus-ring: var(--aw-color-accent);
+
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-/* Custom navbar styling */
+/* ==========================================================================
+   Typography application — heading typeface on headings, body typeface on
+   all non-heading text, site-wide. (Mono is retained for code via Infima.)
+   ========================================================================== */
+body {
+  font-family: var(--ifm-font-family-base);
+  color: var(--ifm-font-color-base);
+}
 
+h1, h2, h3, h4, h5, h6,
+.navbar__title,
+.markdown h1, .markdown h2, .markdown h3,
+.markdown h4, .markdown h5, .markdown h6 {
+  font-family: var(--ifm-heading-font-family);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--ifm-font-family-monospace);
+}
+
+/* ==========================================================================
+   Navbar styling (token-driven)
+   --------------------------------------------------------------------------
+   Hover and keyboard-focus states are driven from the Theme_System tokens.
+   Item/icon colors meet WCAG AA contrast against the navbar background
+   (--aw-color-surface) in both modes. The logo links home (Docusaurus
+   default brand link). At Breakpoint_Mobile (<=480px) all items collapse
+   into the Docusaurus hamburger menu, so the navbar container has no
+   horizontal overflow.
+   ========================================================================== */
 
 .navbar {
   padding: 0.5rem 1rem;
@@ -67,13 +214,28 @@
   width: auto;
 }
 
-
+/* Item/link text uses the navbar link token (AA contrast against surface). */
 .navbar__link {
+  color: var(--ifm-navbar-link-color);
   transition: color 0.2s ease;
 }
 
+/* Hover state: observable color change within 200ms, reverts on leave. */
 .navbar__link:hover {
-  color: var(--ifm-color-primary);
+  color: var(--ifm-navbar-link-hover-color);
+}
+
+/* Keyboard-focus indicator: visible ring meeting AA contrast (>= 3:1)
+   against the navbar background, >= 2px thick. Pointer focus is left
+   untouched via :focus-visible so the ring only appears for keyboard users. */
+.navbar__link:focus-visible,
+.navbar__brand:focus-visible,
+.navbar__toggle:focus-visible,
+.navbar__item--with-icon:focus-visible,
+.navbar__item--with-icon-2:focus-visible {
+  outline: 2px solid var(--aw-navbar-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--aw-radius-sm);
 }
 
 /* Navbar items with icons */
@@ -84,18 +246,20 @@
 
 .navbar__item--with-icon i {
   font-size: 1.2rem;
-  color: var(--ifm-color-primary);
+  color: var(--aw-navbar-icon-color);
   transition: transform 0.2s ease;
   margin-right: 0.2rem;
 }
 
 .navbar__item--with-icon-2 i {
   font-size: 1.5rem;
-  color: var(--ifm-color-primary);
+  color: var(--aw-navbar-icon-color);
   transition: transform 0.2s ease;
   margin-right: 0.1rem;
 }
-.navbar__item--with-icon:hover i {
+
+.navbar__item--with-icon:hover i,
+.navbar__item--with-icon-2:hover i {
   transform: translateY(-2px);
 }
 
@@ -103,4 +267,178 @@
   display: inline-block;
 }
 
+/* Breakpoint_Mobile: items move into the Docusaurus mobile menu. Tighten
+   the navbar gutters and scale the logo so the bar never overflows the
+   viewport horizontally (no horizontal scrollbar on the navbar container). */
+@media (max-width: 480px) {
+  .navbar {
+    padding-left: var(--aw-space-3);
+    padding-right: var(--aw-space-3);
+    overflow-x: hidden;
+  }
 
+  .navbar__logo {
+    height: 2.25rem;
+  }
+
+  .navbar__title {
+    font-size: 1.1rem;
+  }
+}
+
+
+
+/* ==========================================================================
+   Footer styling (token-driven)
+   --------------------------------------------------------------------------
+   The footer is configured with style: 'light' in docusaurus.config.js, so
+   Infima sets its own footer variables on the .footer element. We override
+   them on .footer (higher specificity than :root) and bind them to the
+   Theme_System role tokens (--aw-color-*), which redefine themselves per
+   mode. This guarantees:
+     - Footer background == --aw-color-surface in both modes.
+     - Text, group headings, and links use --aw-color-text, which computes
+       AA contrast against the surface in both modes (#16231c on #ffffff
+       => ~13:1 in Light_Mode; #e9efea on #1c2320 => ~13:1 in Dark_Mode).
+     - Link hover swaps to --aw-color-primary plus an underline, giving an
+       observable hover state (Requirement 7.6).
+   Responsive layout (Requirement 7.4/7.5): the link groups stack into a
+   single vertical column at Breakpoint_Mobile (320-480px) and sit in a
+   horizontal row at Breakpoint_Desktop, with no horizontal scrolling.
+   ========================================================================== */
+
+.footer {
+  /* Bind Infima footer variables to the Theme_System role tokens so the
+     footer recolors automatically on theme toggle and always meets AA. */
+  --ifm-footer-background-color: var(--aw-color-surface);
+  --ifm-footer-color: var(--aw-color-text);
+  --ifm-footer-title-color: var(--aw-color-text);
+  --ifm-footer-link-color: var(--aw-color-text);
+  --ifm-footer-link-hover-color: var(--aw-color-primary);
+
+  background-color: var(--aw-color-surface);
+  color: var(--aw-color-text);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  padding: var(--aw-space-5) var(--aw-space-4);
+}
+
+/* Group headings: heading typeface, high-contrast text role. */
+.footer__title {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+  color: var(--aw-color-text);
+  margin-bottom: var(--aw-space-3);
+}
+
+/* Copyright notice (Aria Watch + current year) at AA contrast. */
+.footer__copyright {
+  color: var(--aw-color-text);
+  margin-top: var(--aw-space-4);
+}
+
+/* Links: high-contrast text role by default; observable hover state
+   (color change to the primary role + underline) within 200ms. */
+.footer__link-item {
+  color: var(--aw-color-text);
+  text-decoration: none;
+  border-radius: var(--aw-radius-sm);
+  transition: color 0.2s ease;
+}
+
+.footer__link-item:hover {
+  color: var(--aw-color-primary);
+  text-decoration: underline;
+}
+
+/* Keyboard-focus indicator on footer links: visible ring meeting AA
+   contrast against the footer background, >= 2px thick. */
+.footer__link-item:focus-visible {
+  outline: 2px solid var(--aw-color-accent);
+  outline-offset: 2px;
+}
+
+/* Desktop (Breakpoint_Desktop, >= 997px): link groups in a horizontal row
+   with no horizontal scrolling. */
+@media (min-width: 997px) {
+  .footer .footer__links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* Breakpoint_Mobile (320-480px): stack link groups into a single vertical
+   column and guarantee no horizontal scrollbar on the footer. */
+@media (max-width: 480px) {
+  .footer {
+    overflow-x: hidden;
+    padding-left: var(--aw-space-3);
+    padding-right: var(--aw-space-3);
+  }
+
+  .footer .footer__links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer .footer__col {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+    margin-bottom: var(--aw-space-4);
+  }
+}
+
+/* ==========================================================================
+   Global focus-indicator styling (Requirement 11.1, 11.3)
+   --------------------------------------------------------------------------
+   A site-wide keyboard-focus indicator for every interactive element that is
+   not already covered by a surface-specific rule above (the navbar and footer
+   define their own focus rings on tokens matched to their backgrounds). This
+   global fallback guarantees that ANY focusable control — links, buttons,
+   role="button" widgets, and form fields — shows a visible indicator when it
+   receives keyboard focus.
+
+   It satisfies Requirement 11.1 / 11.3:
+     - SURROUNDS / ADJOINS the element: a solid `outline` is drawn around the
+       element's border box and pushed out with `outline-offset` so it reads
+       as a ring that surrounds (and is adjacent to) the control.
+     - >= 2px THICK: the outline is 2px (well above the 2px minimum once the
+       offset gap is included).
+     - VISUALLY DISTINCT: the unfocused state has no outline, so the ring is a
+       clear, additive change from the element's resting appearance.
+     - AA CONTRAST: the ring uses the accent role token (--aw-color-accent),
+       which is chosen to meet WCAG AA non-text contrast (>= 3:1) against the
+       page background/surface in BOTH modes (Light_Mode #0e7490 on #f7faf8
+       => ~4.7:1; Dark_Mode #38bdf8 on #121615 => ~9:1).
+
+   :focus-visible is used (not :focus) so the indicator appears for keyboard
+   users without flashing on pointer interaction. The rules above for the
+   navbar/footer keep their own (background-matched) rings via higher
+   specificity / equal specificity declared earlier — this block only fills
+   the gaps for the rest of the page (hero, feature cards, CTA, content
+   links/buttons, and form controls).
+   ========================================================================== */
+
+a[href]:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:not([tabindex='-1']):focus-visible {
+  outline: 2px solid var(--aw-color-accent);
+  outline-offset: 2px;
+  border-radius: var(--aw-radius-sm);
+}
+
+/* Remove the default UA focus ring only when our visible :focus-visible ring
+   is shown, so we never end up with a doubled/!inconsistent indicator. */
+a[href]:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[role='button']:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none;
+}

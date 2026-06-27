@@ -93,6 +93,11 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/social.jpg',
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: false,
+        respectPrefersColorScheme: false,
+      },
       navbar: {
         logo: {
           alt: 'AriaWatch Logo',
@@ -101,43 +106,47 @@ const config = {
         items: [
           {
             to: "/about",
-            html: '<i class="fa fa-compass"></i><span>About</span>',
+            // Icon is decorative: the adjacent "About" text conveys the
+            // meaning, so the icon is hidden from assistive tech (Req 9.4).
+            html: '<i class="fa fa-compass" aria-hidden="true"></i><span>About</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
           {
             to: "/blog",
-            html: '<i class="fa fa-rss"></i><span>Blog</span>',
+            html: '<i class="fa fa-rss" aria-hidden="true"></i><span>Blog</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
           {
             to: "/docs",
-            html: '<i class="fa fa-book"></i><span>Docs</span>',
+            html: '<i class="fa fa-book" aria-hidden="true"></i><span>Docs</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
           {
             to: "https://app.aria.watch",
-            html: '<i class="fa fa-gear"></i><span>App</span>',
+            html: '<i class="fa fa-gear" aria-hidden="true"></i><span>App</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
           {
             to: "/api",
-            html: '<i class="fa fa-plug"></i><span>API</span>',
+            html: '<i class="fa fa-plug" aria-hidden="true"></i><span>API</span>',
             position: "left",
             className: "navbar__item--with-icon",
           },
           {
             to: "https://github.com/Aria-Watch/",
-            html: '<i class="fa fa-github"></i>',
+            // Icon-only link: the icon carries meaning not present in any
+            // adjacent text, so it gets an accessible label (Req 9.4, 6.3).
+            html: '<i class="fa fa-github" role="img" aria-label="Aria Watch on GitHub"></i>',
             position: "right",
             className: "navbar__item--with-icon-2",
           },
           {
             to: "https://www.instagram.com/aria.watch_official/",
-            html: '<i class="fa fa-instagram"></i>',
+            html: '<i class="fa fa-instagram" role="img" aria-label="Aria Watch on Instagram"></i>',
             position: "right",
             className: "navbar__item--with-icon-2",
           },

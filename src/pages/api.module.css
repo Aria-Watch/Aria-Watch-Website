@@ -1,11 +1,12 @@
 .pageContainer {
     position: relative;
     min-height: 90vh;
-    overflow: hidden;
+    overflow-x: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: var(--aw-space-5);
+    max-width: 100%;
   }
   
   .decorativeBackground {
@@ -16,6 +17,7 @@
     height: 100%;
     z-index: -1;
     opacity: 0.8;
+    overflow: hidden;
   }
   
   .floatingElement {
@@ -79,10 +81,10 @@
   }
   
   .contentContainer {
-    background: rgba(255, 255, 255, 0.85);
+    background: color-mix(in srgb, var(--aw-color-surface) 85%, transparent);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 3rem;
+    border-radius: var(--aw-radius-lg);
+    padding: var(--aw-space-5);
     max-width: 800px;
     width: 100%;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -165,7 +167,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: white;
+    background: var(--aw-color-surface);
     color: var(--ifm-color-primary);
     border: 1px solid rgba(var(--ifm-color-primary-rgb), 0.2);
     transition: all 0.2s ease;
@@ -178,26 +180,20 @@
     box-shadow: 0 4px 12px rgba(var(--ifm-color-primary-rgb), 0.3);
   }
   
-  /* Dark mode adjustments */
-  html[data-theme='dark'] .contentContainer {
-    background: rgba(30, 30, 35, 0.85);
-  }
-  
+  /* Dark mode adjustments
+     contentContainer and socialIcon now derive from --aw-color-surface, which
+     is redefined for Dark_Mode in custom.css, so no hard-coded dark overrides
+     are needed here. */
   html[data-theme='dark'] .emailInput {
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  html[data-theme='dark'] .socialIcon {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: color-mix(in srgb, var(--aw-color-text) 5%, transparent);
+    color: var(--aw-color-text);
+    border-color: color-mix(in srgb, var(--aw-color-text) 10%, transparent);
   }
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .contentContainer {
-      padding: 2rem;
+      padding: var(--aw-space-5);
     }
     
     .title {
@@ -205,7 +201,7 @@
     }
     
     .countdownWrapper {
-      gap: 1rem;
+      gap: var(--aw-space-3);
     }
     
     .subscribeForm {
@@ -214,5 +210,28 @@
     
     .subscribeButton {
       width: 100%;
+    }
+  }
+
+  /* Breakpoint_Mobile (<=480px): keep content within the viewport with no
+     horizontal overflow */
+  @media (max-width: 480px) {
+    .pageContainer {
+      padding: var(--aw-space-3);
+    }
+
+    .contentContainer {
+      padding: var(--aw-space-4);
+      border-radius: var(--aw-radius-md);
+    }
+
+    .title {
+      font-size: 2rem;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .description {
+      font-size: 1.05rem;
     }
   }

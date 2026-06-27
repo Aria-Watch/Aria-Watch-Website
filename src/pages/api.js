@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
+import { FaBolt } from "react-icons/fa";
 import styles from "./api.module.css";
 import clsx from "clsx";
 
@@ -37,7 +38,12 @@ export default function About() {
 
         <div className={styles.contentContainer}>
           <div className={styles.badge}>
-            <span>⚡ Launching Soon</span>
+            {/* Icon drawn from the Icon_Set (react-icons). It is decorative:
+                the adjacent "Launching Soon" text conveys the meaning, so it
+                is hidden from assistive technologies (Requirements 9.1, 9.4). */}
+            <span>
+              <FaBolt aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.35rem' }} /> Launching Soon
+            </span>
           </div>
 
           <h1 className={styles.title}>
