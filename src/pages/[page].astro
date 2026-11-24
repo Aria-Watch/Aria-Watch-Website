@@ -1,0 +1,35 @@
+---
+// Renders every Markdown file in content/pages (about.md -> /about/, privacy.md -> /privacy/).
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page) => ({ params: { page: page.id }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const { title, description, eyebrow } = page.data;
+---
+
+<BaseLayout title={title} description={description}>
+  <header class="page-hero">
+    <div class="container narrow">
+      {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+    </div>
+  </header>
+  <div class="container narrow">
+    <div class="prose">
+      <Content />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .narrow {
+    max-width: calc(72ch + 4rem);
+  }
+</style>

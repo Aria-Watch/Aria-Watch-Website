@@ -1,0 +1,136 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts, formatDate, readingTime } from '../../lib/content.js';
+import { SITE } from '../../site.js';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, date, tags, cover } = post.data;
+const editUrl = `${SITE.editBase}/${post.filePath}`;
+---
+
+<BaseLayout title={title} description={description} image={cover?.src} type="article">
+  <article>
+    <header class="page-hero post-hero">
+      <div class="container narrow">
+        <a class="back" href="/blog/"><Icon name="arrowLeft" size={16} /> All posts</a>
+        <h1>{title}</h1>
+        <p class="lead">{description}</p>
+        <div class="meta">
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{readingTime(post.body)}</span>
+          {tags.map((tag: string) => <span class="tag">{tag}</span>)}
+        </div>
+      </div>
+    </header>
+
+    <div class="container narrow">
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer class="post-footer">
+        <a class="edit" href={editUrl} target="_blank" rel="noopener">
+          <Icon name="edit" size={16} /> Edit this post on GitHub
+        </a>
+        <nav class="pager" aria-label="More posts">
+          {
+            older && (
+              <a class="card pager__link" href={`/blog/${older.id}/`}>
+                <span>Previous</span>
+                <strong>{older.data.title}</strong>
+              </a>
+            )
+          }
+          {
+            newer && (
+              <a class="card pager__link pager__link--next" href={`/blog/${newer.id}/`}>
+                <span>Next</span>
+                <strong>{newer.data.title}</strong>
+              </a>
+            )
+          }
+        </nav>
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .narrow {
+    max-width: calc(72ch + 4rem);
+  }
+  .post-hero h1 {
+    max-width: none;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .post-footer {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border);
+  }
+  .edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    color: var(--muted);
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+  .edit:hover {
+    color: var(--accent);
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+  .pager__link {
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-md);
+  }
+  .pager__link span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .pager__link strong {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+  }
+  .pager__link--next {
+    grid-column: 2;
+    text-align: right;
+  }
+  @media (max-width: 600px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager__link--next {
+      grid-column: auto;
+    }
+  }
+</style>

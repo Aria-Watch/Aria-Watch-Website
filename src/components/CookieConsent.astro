@@ -1,0 +1,226 @@
+---
+/**
+ * GDPR / ePrivacy cookie consent for Google Analytics 4.
+ *
+ * - Nothing from Google is requested until the visitor clicks "Accept"
+ *   (no gtag.js, no Consent Mode pings): prior consent, as required by
+ *   Art. 5(3) ePrivacy Directive and the Italian Garante 2021 guidelines.
+ * - "Reject" is as prominent as "Accept"; closing the banner (×) = reject.
+ * - The choice is stored on the device only and is asked again after
+ *   CONSENT.maxAgeDays or when CONSENT.version changes.
+ * - Consent can be withdrawn at any time ("Cookie settings" in the footer):
+ *   GA is disabled and its cookies are deleted.
+ */
+import Icon from './Icon.astro';
+import { SITE, CONSENT } from '../site.js';
+
+const config = {
+  gaId: SITE.gaMeasurementId,
+  version: CONSENT.version,
+  maxAgeMs: CONSENT.maxAgeDays * 24 * 60 * 60 * 1000,
+  gaCookieSeconds: CONSENT.gaCookieSeconds,
+};
+---
+
+<section
+  class="consent"
+  id="cookie-consent"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="consent-title"
+  aria-describedby="consent-text"
+  hidden
+>
+  <button class="consent__close" type="button" data-consent="reject" aria-label="Close and reject analytics cookies">
+    <Icon name="close" size={18} />
+  </button>
+  <h2 id="consent-title">Your privacy, your choice</h2>
+  <p id="consent-text">
+    We'd like to use Google Analytics cookies to understand how visitors use this site, so we can improve it.
+    They are set <strong>only if you accept</strong>. Essential storage (your theme and this choice) never
+    leaves your device. You can change your mind at any time from <em>Cookie settings</em> at the bottom of
+    every page. <a href="/privacy/#cookies">Read the cookie policy</a>.
+  </p>
+  <div class="consent__actions">
+    <button class="btn consent__btn" type="button" data-consent="reject">Reject</button>
+    <button class="btn consent__btn" type="button" data-consent="accept">Accept</button>
+  </div>
+</section>
+
+<script is:inline define:vars={{ config }}>
+  (() => {
+    const KEY = 'aw-consent';
+    const banner = document.getElementById('cookie-consent');
+    if (!banner || !/^G-[A-Z0-9]+$/.test(config.gaId)) return;
+
+    const read = () => {
+      try {
+        const c = JSON.parse(localStorage.getItem(KEY));
+        if (!c || c.v !== config.version || Date.now() - c.t > config.maxAgeMs) return null;
+        return c;
+      } catch {
+        return null;
+      }
+    };
+
+    const loadAnalytics = () => {
+      if (window.__awGaLoaded) return;
+      window.__awGaLoaded = true;
+      window['ga-disable-' + config.gaId] = false;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+      gtag('consent', 'default', {
+        analytics_storage: 'granted',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+      gtag('js', new Date());
+      gtag('config', config.gaId, {
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+        cookie_expires: config.gaCookieSeconds,
+        cookie_flags: 'SameSite=Lax;Secure',
+      });
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(config.gaId);
+      document.head.appendChild(s);
+    };
+
+    const deleteAnalyticsCookies = () => {
+      const parts = location.hostname.split('.');
+      const domains = [''];
+      for (let i = 0; i < parts.length - 1; i++) {
+        const d = parts.slice(i).join('.');
+        domains.push(';domain=' + d, ';domain=.' + d);
+      }
+      document.cookie
+        .split(';')
+        .map((c) => c.split('=')[0].trim())
+        .filter((name) => name === '_ga' || name.startsWith('_ga_') || name === '_gid' || name === '_gat')
+        .forEach((name) => {
+          domains.forEach((d) => {
+            document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/' + d;
+          });
+        });
+    };
+
+    const show = (focus) => {
+      banner.hidden = false;
+      if (focus) banner.querySelector('[data-consent="accept"]').focus();
+    };
+    const hide = () => {
+      banner.hidden = true;
+    };
+
+    const decide = (analytics) => {
+      localStorage.setItem(KEY, JSON.stringify({ v: config.version, t: Date.now(), analytics }));
+      hide();
+      if (analytics) {
+        loadAnalytics();
+      } else {
+        window['ga-disable-' + config.gaId] = true;
+        if (window.gtag) gtag('consent', 'update', { analytics_storage: 'denied' });
+        deleteAnalyticsCookies();
+      }
+    };
+
+    banner.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-consent]');
+      if (btn) decide(btn.dataset.consent === 'accept');
+    });
+    banner.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') decide(false);
+    });
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-cookie-settings]')) {
+        e.preventDefault();
+        show(true);
+      }
+    });
+
+    const saved = read();
+    if (!saved) {
+      deleteAnalyticsCookies(); // expired/old consent: start clean
+      show(false);
+    } else if (saved.analytics) {
+      loadAnalytics();
+    }
+  })();
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 90;
+    left: 1rem;
+    bottom: 1rem;
+    width: min(26rem, calc(100vw - 2rem));
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    /* Pure CSS entrance: never depends on JS timing, so the banner can't get
+       stuck invisible-but-clickable. */
+    animation: consent-in 0.35s var(--ease) both;
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  @keyframes consent-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  .consent h2 {
+    font-size: 1.2rem;
+    padding-right: 2rem;
+  }
+  .consent p {
+    margin-top: var(--space-3);
+    color: var(--muted);
+  }
+  .consent strong {
+    color: var(--text);
+  }
+  .consent__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .consent__close:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  .consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  /* Both choices deliberately look identical: equal prominence. */
+  .consent__btn {
+    justify-content: center;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+  }
+  .consent__btn:hover {
+    background: var(--btn-bg-hover);
+  }
+</style>

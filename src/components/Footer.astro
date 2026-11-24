@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logoIcon from '../assets/logo-icon.png';
+import { SITE, LINKS } from '../site.js';
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href="/" class="brand" aria-label="Aria Watch — home">
+        <span class="brand__badge">
+          <Image src={logoIcon} alt="" width={30} height={32} />
+        </span>
+        <span class="brand__name">Aria<span>Watch</span></span>
+      </a>
+      <p>Open-source air-quality monitoring.<br />{SITE.tagline}.</p>
+      <div class="site-footer__social">
+        <a class="icon-btn" href={LINKS.github} target="_blank" rel="noopener"><Icon name="github" label="GitHub" /></a>
+        <a class="icon-btn" href={LINKS.instagram} target="_blank" rel="noopener"><Icon name="instagram" label="Instagram" /></a>
+        <a class="icon-btn" href={LINKS.email}><Icon name="mail" label="Email" /></a>
+        <a class="icon-btn" href="/blog/rss.xml"><Icon name="rss" label="RSS feed" /></a>
+      </div>
+    </div>
+
+    <nav aria-label="Project">
+      <h2>Project</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/docs/">Documentation</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/api/">API</a></li>
+        <li><a href={LINKS.app} target="_blank" rel="noopener">App</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-label="Community">
+      <h2>Community</h2>
+      <ul>
+        <li><a href={LINKS.github} target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href={LINKS.instagram} target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href={LINKS.email}>info@aria.watch</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-label="Legal">
+      <h2>More</h2>
+      <ul>
+        <li><a href="/privacy/">Privacy &amp; cookie policy</a></li>
+        {
+          SITE.gaMeasurementId && (
+            <li>
+              <a href="/privacy/#cookies" data-cookie-settings>Cookie settings</a>
+            </li>
+          )
+        }
+        <li><a href="/blog/rss.xml">RSS feed</a></li>
+        <li><a href={SITE.repo} target="_blank" rel="noopener">Website source</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container site-footer__bottom">
+    <p>© {new Date().getFullYear()} Aria Watch · Open hardware, open data.</p>
+  </div>
+</footer>

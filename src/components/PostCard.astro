@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { formatDate, readingTime } from '../lib/content.js';
+
+interface Props {
+  post: any;
+  headingLevel?: 'h2' | 'h3';
+}
+const { post, headingLevel: Heading = 'h3' } = Astro.props;
+const { title, description, date, cover, tags } = post.data;
+---
+
+<a class="card post-card" href={`/blog/${post.id}/`}>
+  {
+    cover && (
+      <div class="post-card__media">
+        <Image src={cover} alt="" widths={[480, 720, 960]} sizes="(max-width: 700px) 100vw, 380px" />
+      </div>
+    )
+  }
+  <div class="post-card__body">
+    <div class="post-card__meta">
+      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{readingTime(post.body)}</span>
+      {tags[0] && <span class="tag">{tags[0]}</span>}
+    </div>
+    <Heading>{title}</Heading>
+    <p>{description}</p>
+    <span class="post-card__more">Read the story <Icon name="arrowRight" size={16} /></span>
+  </div>
+</a>

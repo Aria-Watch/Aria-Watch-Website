@@ -1,0 +1,282 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { getDocs, docHref } from '../../lib/content.js';
+import { SITE } from '../../site.js';
+
+export async function getStaticPaths() {
+  const docs = await getDocs();
+  return docs.map((doc, i) => ({
+    params: { slug: doc.id === 'index' ? undefined : doc.id },
+    props: { doc, docs, prev: docs[i - 1], next: docs[i + 1] },
+  }));
+}
+
+const { doc, docs, prev, next } = Astro.props;
+const { Content, headings } = await render(doc);
+const toc = headings.filter((h: { depth: number }) => h.depth === 2 || h.depth === 3);
+const current = docHref(doc);
+
+// Group the sidebar by `section` (docs without one go first, untitled).
+const groups = new Map<string, any[]>();
+for (const d of docs) {
+  const key = d.data.section ?? '';
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key)!.push(d);
+}
+---
+
+<BaseLayout title={doc.data.title} description={doc.data.description}>
+  <div class="container docs">
+    <aside class="docs__sidebar">
+      <details class="docs__nav" open>
+        <summary>Documentation</summary>
+        <nav aria-label="Documentation">
+          {
+            [...groups].map(([section, items]) => (
+              <div class="docs__group">
+                {section && <p class="docs__group-title">{section}</p>}
+                <ul>
+                  {items.map((d) => (
+                    <li>
+                      <a href={docHref(d)} aria-current={docHref(d) === current ? 'page' : undefined}>
+                        {d.data.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </nav>
+      </details>
+    </aside>
+
+    <article class="docs__main">
+      <header class="docs__header">
+        <span class="eyebrow">{doc.data.section ?? 'Docs'}</span>
+        <h1>{doc.data.title}</h1>
+        {doc.data.description && <p class="lead">{doc.data.description}</p>}
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer class="docs__footer">
+        <a class="docs__edit" href={`${SITE.editBase}/${doc.filePath}`} target="_blank" rel="noopener">
+          <Icon name="edit" size={16} /> Edit this page on GitHub
+        </a>
+        <nav class="docs__pager" aria-label="Docs pages">
+          {
+            prev && (
+              <a class="card" href={docHref(prev)}>
+                <span>Previous</span>
+                <strong>{prev.data.title}</strong>
+              </a>
+            )
+          }
+          {
+            next && (
+              <a class="card docs__next" href={docHref(next)}>
+                <span>Next</span>
+                <strong>{next.data.title}</strong>
+              </a>
+            )
+          }
+        </nav>
+      </footer>
+    </article>
+
+    {
+      toc.length > 1 && (
+        <aside class="docs__toc" aria-label="On this page">
+          <p>On this page</p>
+          <ul>
+            {toc.map((h: { depth: number; slug: string; text: string }) => (
+              <li class={`depth-${h.depth}`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .docs {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr) 14rem;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    padding-top: var(--space-7);
+  }
+  .docs__sidebar,
+  .docs__toc {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+    align-self: start;
+    max-height: calc(100dvh - var(--header-h) - var(--space-7));
+    overflow-y: auto;
+  }
+  .docs__nav summary {
+    display: none;
+  }
+  .docs__group + .docs__group {
+    margin-top: var(--space-5);
+  }
+  .docs__group-title,
+  .docs__toc > p {
+    margin-bottom: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .docs__sidebar ul,
+  .docs__toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .docs__sidebar a {
+    display: block;
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .docs__sidebar a:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .docs__sidebar a[aria-current='page'] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .docs__header h1 {
+    margin-top: var(--space-3);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+  .docs__header .lead {
+    margin-top: var(--space-4);
+    max-width: 60ch;
+    font-size: 1.2rem;
+    color: var(--muted);
+  }
+  .docs__header {
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .docs__toc {
+    font-size: 0.88rem;
+  }
+  .docs__toc ul {
+    border-left: 1px solid var(--border);
+  }
+  .docs__toc a {
+    display: block;
+    padding: 0.3rem 0 0.3rem 0.9rem;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    color: var(--muted);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .docs__toc a:hover {
+    color: var(--text);
+    border-left-color: var(--leaf);
+  }
+  .docs__toc .depth-3 a {
+    padding-left: 1.7rem;
+    font-size: 0.84rem;
+  }
+
+  .docs__footer {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border);
+  }
+  .docs__edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    color: var(--muted);
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+  .docs__edit:hover {
+    color: var(--accent);
+  }
+  .docs__pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+  .docs__pager .card {
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-md);
+  }
+  .docs__pager span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .docs__pager strong {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+  }
+  .docs__next {
+    grid-column: 2;
+    text-align: right;
+  }
+
+  @media (max-width: 1180px) {
+    .docs {
+      grid-template-columns: 14rem minmax(0, 1fr);
+    }
+    .docs__toc {
+      display: none;
+    }
+  }
+  @media (max-width: 860px) {
+    .docs {
+      grid-template-columns: 1fr;
+      padding-top: var(--space-5);
+    }
+    .docs__sidebar {
+      position: static;
+      max-height: none;
+    }
+    .docs__nav {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    .docs__nav summary {
+      display: block;
+      padding: 0.8rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .docs__nav nav {
+      padding: 0 0.5rem 0.75rem;
+    }
+    .docs__pager {
+      grid-template-columns: 1fr;
+    }
+    .docs__next {
+      grid-column: auto;
+    }
+  }
+</style>

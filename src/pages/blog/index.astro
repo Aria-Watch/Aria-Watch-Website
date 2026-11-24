@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts, formatDate, readingTime } from '../../lib/content.js';
+
+const [featured, ...rest] = await getPosts();
+---
+
+<BaseLayout title="Blog" description="News, events and stories from the Aria Watch team.">
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Blog</span>
+      <h1>Stories from the field.</h1>
+      <p class="lead">Events, milestones and updates from the Aria Watch team.</p>
+    </div>
+  </header>
+
+  <div class="container">
+    {
+      featured && (
+        <a class="card featured" href={`/blog/${featured.id}/`}>
+          {featured.data.cover && (
+            <div class="featured__media">
+              <Image
+                src={featured.data.cover}
+                alt=""
+                widths={[640, 960, 1280]}
+                sizes="(max-width: 860px) 100vw, 640px"
+                loading="eager"
+              />
+            </div>
+          )}
+          <div class="featured__body">
+            <div class="post-card__meta">
+              <span class="tag">Latest</span>
+              <time datetime={featured.data.date.toISOString()}>{formatDate(featured.data.date)}</time>
+              <span aria-hidden="true">·</span>
+              <span>{readingTime(featured.body)}</span>
+            </div>
+            <h2>{featured.data.title}</h2>
+            <p>{featured.data.description}</p>
+            <span class="post-card__more">
+              Read the story <Icon name="arrowRight" size={16} />
+            </span>
+          </div>
+        </a>
+      )
+    }
+
+    {
+      rest.length > 0 && (
+        <div class="grid-3 more">
+          {rest.map((post) => <PostCard post={post} headingLevel="h2" />)}
+        </div>
+      )
+    }
+
+    <p class="rss">
+      <a href="/blog/rss.xml"><Icon name="rss" size={16} /> Subscribe via RSS</a>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .featured {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+  }
+  .featured__media {
+    min-height: 100%;
+    background: var(--surface-2);
+  }
+  .featured__media img {
+    width: 100%;
+    height: 100%;
+    max-height: 30rem;
+    object-fit: cover;
+  }
+  .featured__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+  }
+  .featured h2 {
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+  }
+  .featured p {
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  .more {
+    margin-top: var(--space-5);
+  }
+  .rss {
+    margin-top: var(--space-7);
+    text-align: center;
+  }
+  .rss a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    color: var(--muted);
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+  .rss a:hover {
+    color: var(--accent);
+  }
+  @media (max-width: 860px) {
+    .featured {
+      grid-template-columns: 1fr;
+    }
+    .featured__media img {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

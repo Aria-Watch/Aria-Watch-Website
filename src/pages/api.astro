@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { LINKS } from '../site.js';
+---
+
+<BaseLayout title="API" description="The Aria Watch public data API is coming soon.">
+  <section class="container soon">
+    <div class="soon__icon"><Icon name="plug" size={30} /></div>
+    <span class="eyebrow">Launching soon</span>
+    <h1>An open API for open air data.</h1>
+    <p class="lead">
+      We're working on a public API to access the air quality data collected by the Aria Watch network.
+      Stay tuned — in the meantime, follow the project on GitHub.
+    </p>
+    <div class="soon__actions">
+      <a class="btn btn--primary" href={LINKS.github} target="_blank" rel="noopener">
+        <Icon name="github" size={18} /> Follow on GitHub
+      </a>
+      <a class="btn btn--ghost" href="/">Back to home</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .soon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-block: var(--space-9) 0;
+  }
+  .soon__icon {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-bottom: var(--space-5);
+    border-radius: 1.4rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent-soft) 45%, transparent);
+  }
+  h1 {
+    margin-top: var(--space-4);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    max-width: 16ch;
+  }
+  .lead {
+    margin-top: var(--space-5);
+    max-width: 52ch;
+    font-size: 1.2rem;
+    color: var(--muted);
+  }
+  .soon__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+</style>

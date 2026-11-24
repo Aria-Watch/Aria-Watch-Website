@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logoIcon from '../assets/logo-icon.png';
+import { NAV, LINKS } from '../site.js';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => href !== '/' && path.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="brand" aria-label="Aria Watch — home">
+      <span class="brand__badge">
+        <Image src={logoIcon} alt="" width={30} height={32} loading="eager" />
+      </span>
+      <span class="brand__name">Aria<span>Watch</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul class="nav__links">
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={['nav__link', { 'is-active': isActive(item.href) }]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                {item.label}
+                {item.external && <Icon name="external" size={13} />}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a class="icon-btn hide-sm" href={LINKS.github} target="_blank" rel="noopener">
+        <Icon name="github" label="Aria Watch on GitHub" />
+      </a>
+      <a class="icon-btn hide-sm" href={LINKS.instagram} target="_blank" rel="noopener">
+        <Icon name="instagram" label="Aria Watch on Instagram" />
+      </a>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+        <Icon name="moon" class="theme-toggle__moon" />
+        <Icon name="sun" class="theme-toggle__sun" />
+      </button>
+
+      <details class="mobile-nav">
+        <summary class="icon-btn" aria-label="Open menu">
+          <Icon name="menu" class="mobile-nav__open" />
+          <Icon name="close" class="mobile-nav__close" />
+        </summary>
+        <div class="mobile-nav__panel">
+          <ul>
+            {
+              NAV.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
+                    {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
+                  >
+                    {item.label}
+                    {item.external && <Icon name="external" size={14} />}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="mobile-nav__social">
+            <a href={LINKS.github} target="_blank" rel="noopener"><Icon name="github" /> GitHub</a>
+            <a href={LINKS.instagram} target="_blank" rel="noopener"><Icon name="instagram" /> Instagram</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+</script>

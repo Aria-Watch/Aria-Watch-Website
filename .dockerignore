@@ -1,20 +1,15 @@
-# Keep the build context (and final image) small and reproducible.
-# node_modules and build are regenerated inside the image.
+# Keep the build context small; node_modules and dist are rebuilt in the image.
 node_modules
-build
-.docusaurus
+dist
+.astro
 
-# Version control / CI / editor
+# Version control / editor / tooling
 .git
 .gitignore
 .github
-
-# Specs, docs-tooling, and local test artifacts not needed to build/serve
+.claude
 .kiro
-test
-coverage
-jest.config.js
-jest.setup.js
+.vscode
 
 # Logs and OS cruft
 *.log
