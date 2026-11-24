@@ -13,3 +13,7 @@ Thumbs.db
 # Local env
 .env
 .env.*
+
+# Editor / AI tools (local only)
+.kiro/
+.claude/
