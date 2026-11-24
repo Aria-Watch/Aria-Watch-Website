@@ -3,7 +3,6 @@ import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { getDocs, docHref } from '../../lib/content.js';
-import { SITE } from '../../site.js';
 
 export async function getStaticPaths() {
   const docs = await getDocs();
@@ -65,9 +64,6 @@ for (const d of docs) {
       </div>
 
       <footer class="docs__footer">
-        <a class="docs__edit" href={`${SITE.editBase}/${doc.filePath}`} target="_blank" rel="noopener">
-          <Icon name="edit" size={16} /> Edit this page on GitHub
-        </a>
         <nav class="docs__pager" aria-label="Docs pages">
           {
             prev && (
@@ -206,22 +202,10 @@ for (const d of docs) {
     padding-top: var(--space-6);
     border-top: 1px solid var(--border);
   }
-  .docs__edit {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45em;
-    color: var(--muted);
-    font-size: 0.92rem;
-    text-decoration: none;
-  }
-  .docs__edit:hover {
-    color: var(--accent);
-  }
   .docs__pager {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-4);
-    margin-top: var(--space-6);
   }
   .docs__pager .card {
     gap: var(--space-1);

@@ -23,7 +23,8 @@ function urlFor(file) {
   if (collection === 'pages') return `/${name}/`;
   if (collection === 'blog') {
     const source = fs.readFileSync(file, 'utf8');
-    const slug = source.match(/^slug:\s*["']?([^"'\n]+)["']?\s*$/m)?.[1];
+    // \r is excluded too: on Windows checkouts the files may have CRLF endings.
+    const slug = source.match(/^slug:[ \t]*["']?([^"'\r\n]+?)["']?[ \t]*\r?$/m)?.[1];
     return `/blog/${slug ?? name}/`;
   }
   return null;

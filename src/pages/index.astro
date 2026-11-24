@@ -6,7 +6,7 @@ import PostCard from '../components/PostCard.astro';
 import { getPosts } from '../lib/content.js';
 import { LINKS } from '../site.js';
 
-import boards from '../../content/pages/images/boards.jpg';
+import devices from '../../content/pages/images/devices.jpg';
 import pollution from '../assets/pollution.jpg';
 import openSource from '../assets/illustrations/open-source.svg';
 import serverStatus from '../assets/illustrations/server-status.svg';
@@ -106,8 +106,8 @@ const particles = Array.from({ length: 18 }, (_, i) => {
       <div class="hero__visual">
         <figure class="hero__photo">
           <Image
-            src={boards}
-            alt="Aria Watch boards and prototypes: Borino test boards, 3D-printed cases and a particulate-matter sensor"
+            src={devices}
+            alt="Aria Watch devices: white solar-powered enclosures and open boards showing the sensors"
             widths={[480, 720, 960, 1200]}
             sizes="(max-width: 900px) 90vw, 520px"
             loading="eager"

@@ -6,8 +6,6 @@ export const SITE = {
     'Open-source air-quality monitors and a community data network. Know what you breathe. Act for the planet.',
   url: 'https://aria.watch',
   repo: 'https://github.com/Aria-Watch/Aria-Watch-Website',
-  // Base for "Edit this page on GitHub" links (+ the entry's file path).
-  editBase: 'https://github.com/Aria-Watch/Aria-Watch-Website/edit/main',
   // Google Analytics 4 measurement ID. A PUBLIC_GA_MEASUREMENT_ID environment
   // variable at build time overrides it; set this to '' to remove analytics
   // and the cookie banner entirely.
