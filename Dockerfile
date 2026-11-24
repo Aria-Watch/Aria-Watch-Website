@@ -38,8 +38,10 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 80
 
 # Health check used by Coolify (it picks up the Dockerfile HEALTHCHECK).
+# Generous timeout/start period: on a small burstable VPS a busy CPU (e.g. right
+# after a build) can make the first checks slow, and that must not fail a deploy.
 # wget is already part of the nginx alpine image.
-HEALTHCHECK --interval=60s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=60s --timeout=30s --start-period=60s --retries=3 \
     CMD wget -q -O /dev/null http://127.0.0.1/health || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
