@@ -37,4 +37,9 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
+# Health check used by Coolify (it picks up the Dockerfile HEALTHCHECK).
+# wget is already part of the nginx alpine image.
+HEALTHCHECK --interval=60s --timeout=5s --start-period=10s --retries=3 \
+    CMD wget -q -O /dev/null http://127.0.0.1/health || exit 1
+
 CMD ["nginx", "-g", "daemon off;"]

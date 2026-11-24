@@ -41,6 +41,8 @@ docker build -t ariawatch-site .
 docker run -p 8080:80 ariawatch-site
 ```
 
+`/health` returns `{"status":"ok"}` (not logged). The Dockerfile `HEALTHCHECK` calls it every 60 seconds and Coolify uses it as is.
+
 ## Privacy
 
 Google Analytics is loaded **only after the visitor accepts** the cookie banner, and nginx stores IP addresses truncated. Details are in the [privacy & cookie policy](content/pages/privacy.md).
